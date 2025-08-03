@@ -9,21 +9,10 @@ namespace PackML_StateMachine.Tests.transitioning;
 
 public class TestTransitioningWithoutActions
 {
-    static Isa88StateMachine stateMachine;
-
-    public TestTransitioningWithoutActions()
-    {
-        testSimpleSetup();
-    }
-
-    public static void testSimpleSetup()
-    {
-        stateMachine = new StateMachineBuilder().build();
-    }
-
     [Fact]
     public async Task testOtherInitialState()
     {
+        var stateMachine = new StateMachineBuilder().build();
         stateMachine.start();
         stateMachine.abort();
 
