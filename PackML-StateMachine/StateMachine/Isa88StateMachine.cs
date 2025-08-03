@@ -9,6 +9,7 @@ public class Isa88StateMachine
     private List<IStateChangeObserver> stateChangeObservers = new ();
     private CancellationTokenSource? runningActionCancellation;
     private Task? runningAction;
+    private static readonly ILogger _logger = StateMachineLogger.For<Isa88StateMachine>();
 
     /**
 	 * Instantiates a new {@link Isa88StateMachine} with the a given initial state
@@ -175,9 +176,11 @@ public class Isa88StateMachine
             {
                 await runningAction;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException e)
             {
                 // Expected when cancellation occurs
+                _logger.LogError(e,"Previous action was cancelled in {StateName} state.", currentState);
+                Console.WriteLine(e.Message);
             }
         }
 
