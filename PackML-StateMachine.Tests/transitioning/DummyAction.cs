@@ -3,7 +3,7 @@
 namespace PackML_StateMachine.Tests.transitioning;
 public class DummyAction : IStateAction
 {
-    int dummyActionTime;
+    readonly int dummyActionTime;
 
     public DummyAction(int dummyActionTime)
     {
@@ -16,7 +16,7 @@ public class DummyAction : IStateAction
         {
             Thread.Sleep(dummyActionTime);
         }
-        catch (ThreadInterruptedException e)
+        catch (ThreadInterruptedException)
         {
             Console.WriteLine("Thread interrupted");
         }

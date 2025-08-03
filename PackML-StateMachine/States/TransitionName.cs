@@ -1,7 +1,6 @@
 ﻿namespace PackML_StateMachine.States;
 public enum TransitionName
 {
-
     start,
     hold,
     unhold,
@@ -11,5 +10,4 @@ public enum TransitionName
     stop,
     abort,
     clear
-
 }
