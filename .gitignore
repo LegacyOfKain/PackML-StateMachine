@@ -1,0 +1,69 @@
+﻿# → Generated via “dotnet new gitignore” or GitHub template:
+#   https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+## Ignore Visual Studio user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Ignore build outputs
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bin/
+obj/
+*.log
+
+## Visual Studio temporary caches
+.vs/
+
+## Test results (MSTest, NUnit, benchmark)
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+nunit-*.xml
+BenchmarkDotNet.Artifacts/
+
+## Legacy/DNX files, artifacts folder (e.g. F#)
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.snk
+*Coverage*.xml
+
+## Unwanted per-IDE files & patterns (Resharper, Rider, etc.)
+_ReSharper*/
+*.DotSettings.user
+.idea/
+*.sln.iml
+.vscode/*
+!*.vscode/settings.json
+!*.vscode/launch.json
+!*.vscode/tasks.json
+BuildLog.* 
+
+## NuGet/NuGet package cache
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## Azure, publish settings, and intermediate files
+*.azurePubxml
+PublishScripts/
+*.publishproj
+
+## Rider/VisualStudio extensions, logs, twig, etc.
+!*.cache/
+Profile/*
+
+## OS & Editor temp files
+*~*
+*.DS_Store?
+Thumbs.db
+.gitignore.lb
+
