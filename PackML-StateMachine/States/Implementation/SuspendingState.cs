@@ -50,20 +50,14 @@ public class SuspendingState : StoppableState
     }
 
 
-    public override async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public override void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            Logger.LogDebug("Cancellation requested in {StateName} state.", nameof(this.GetType));
-            return; // Exit if cancellation is requested
-        }
-
         IStateAction actionToRun = stateMachine.getStateActionManager().getAction(ActiveStateName.Suspending);
         base.executeAction(actionToRun);
 
         // Make sure the current state is still execute before going to Completing (could have been changed in the mean time).
         if (stateMachine.getState() is SuspendingState) {
-            await stateMachine.setStateAndRunActionAsync(new SuspendedState());
+            stateMachine.setStateAndRunAction(new SuspendedState());
         }
     }
 

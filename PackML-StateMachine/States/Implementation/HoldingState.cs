@@ -52,20 +52,14 @@ public class HoldingState : StoppableState
     }
 
 
-    public override async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public override void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            Logger.LogDebug("Cancellation requested in {StateName} state.", nameof(this.GetType));
-            return; // Exit if cancellation is requested
-        }
-
         IStateAction actionToRun = stateMachine.getStateActionManager().getAction(ActiveStateName.Holding);
         base.executeAction(actionToRun);
 
         // Make sure the current state is still Holding before going to Held (could have been changed in the mean time).
         if (stateMachine.getState() is HoldingState) {
-            await stateMachine.setStateAndRunActionAsync(new HeldState());
+            stateMachine.setStateAndRunAction(new HeldState());
         }
     }
 

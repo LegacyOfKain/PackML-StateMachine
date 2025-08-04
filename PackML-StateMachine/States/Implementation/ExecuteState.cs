@@ -38,20 +38,14 @@ public class ExecuteState : StoppableState
         // Clear cannot be fired from Execute -> Do nothing except maybe giving a warning
     }
 
-    public override async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public override void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            Logger.LogDebug("Cancellation requested in {StateName} state.", nameof(this.GetType));
-            return; // Exit if cancellation is requested
-        }
-
         IStateAction actionToRun = stateMachine.getStateActionManager().getAction(ActiveStateName.Execute);
         base.executeAction(actionToRun);
 
         // Make sure the current state is still Execute before going to Completing (could have been changed in the mean time).
         if (stateMachine.getState() is ExecuteState) {
-            await stateMachine.setStateAndRunActionAsync(new CompletingState());
+            stateMachine.setStateAndRunAction(new CompletingState());
         }
     }
 }

@@ -18,11 +18,10 @@ public abstract class State : IState
 	 * Execute an action, complete this state and transition to the next state 
 	 * @param stateMachine The current state machine instance
 	 */
-    public virtual async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public virtual void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
         // Default implementation: Do nothing
         // Acting states have to override this method in order to automatically complete
-        await Task.Delay(0, cancellationToken); // Simulate async operation
     }
 
     /**

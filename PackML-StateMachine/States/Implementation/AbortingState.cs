@@ -61,20 +61,14 @@ public class AbortingState : State
     }
 
     
-    public override async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public override void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            Logger.LogDebug("Cancellation requested in {StateName} state.", nameof(this.GetType));
-            return; // Exit if cancellation is requested
-        }
-
         IStateAction actionToRun = stateMachine.getStateActionManager().getAction(ActiveStateName.Aborting);
         base.executeAction(actionToRun);
 
         // Make sure the current state is still Aborting before going to Aborted (could have been changed in the mean time).
         if (stateMachine.getState() is AbortingState) {
-            await stateMachine.setStateAndRunActionAsync(new AbortedState());
+            stateMachine.setStateAndRunAction(new AbortedState());
         }
     }
 

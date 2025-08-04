@@ -1,4 +1,6 @@
 ﻿using PackML_StateMachine.States;
+using PackML_StateMachine.Threading;
+using System.Threading;
 
 namespace PackML_StateMachine.StateMachine;
 
@@ -7,8 +9,8 @@ public class Isa88StateMachine
     private State currentState;
     private StateActionManager stateActionManager = new StateActionManager();
     private List<IStateChangeObserver> stateChangeObservers = new ();
-    private CancellationTokenSource? runningActionCancellation;
-    private Task? runningAction;
+    private CancellableTask runningAction;
+    private ICancellableSingleTaskPool actionExecutor = new CancellableSingleTaskPool();
     private static readonly ILogger _logger = StateMachineLogger.For<Isa88StateMachine>();
 
     /**
@@ -160,28 +162,12 @@ public class Isa88StateMachine
      * 
      * @param state The new state that will be set as the current state
      */
-    public async Task setStateAndRunActionAsync(State state)
+    public void setStateAndRunAction(State state)
     {
-        // Cancel the current action if there is one
-        if (runningActionCancellation != null)
+        // Stop the current action if there is one
+        if (runningAction != null)
         {
-            await runningActionCancellation.CancelAsync();
-            runningActionCancellation.Dispose();
-        }
-
-        // Wait for the previous action to complete if it's still running
-        if (runningAction != null && !runningAction.IsCompleted)
-        {
-            try
-            {
-                await runningAction;
-            }
-            catch (OperationCanceledException e)
-            {
-                // Expected when cancellation occurs
-                _logger.LogError(e,"Previous action was cancelled in {StateName} state.", currentState);
-                Console.WriteLine(e.Message);
-            }
+            runningAction.Cancel();
         }
 
         // Set the new state and notify all observers
@@ -191,29 +177,11 @@ public class Isa88StateMachine
             observer.onStateChanged(this.currentState);
         }
 
-        // Create new cancellation token for the new action
-        runningActionCancellation = new CancellationTokenSource();
-
-        // Execute the action of the new state on a background task
-        this.runningAction = Task.Run(async () =>
+        // Execute the action of the new state
+        this.runningAction = actionExecutor.Submit(cancellationToken => 
         {
-            try
-            {
-                await this.currentState.executeActionAndCompleteAsync(this, runningActionCancellation.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                // Expected when cancellation occurs
-            }
-        }, runningActionCancellation.Token);
-    }
-
-    /**
-     * Synchronous version of setStateAndRunAction for backward compatibility
-     */
-    public void setStateAndRunAction(State state)
-    {
-        _ = Task.Run(async () => await setStateAndRunActionAsync(state));
+            this.currentState.executeActionAndComplete(this);
+        });
     }
 
     /**

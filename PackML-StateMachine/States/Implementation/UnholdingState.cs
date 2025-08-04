@@ -50,20 +50,14 @@ public class UnholdingState : StoppableState
     }
 
 
-    public override async Task executeActionAndCompleteAsync(Isa88StateMachine stateMachine, CancellationToken cancellationToken)
+    public override void executeActionAndComplete(Isa88StateMachine stateMachine)
     {
-        if (cancellationToken.IsCancellationRequested)
-        {
-            Logger.LogDebug("Cancellation requested in {StateName} state.", nameof(this.GetType));
-            return; // Exit if cancellation is requested
-        }
-
         IStateAction actionToRun = stateMachine.getStateActionManager().getAction(ActiveStateName.Unholding);
         base.executeAction(actionToRun);
 
         // Make sure the current state is still Unholding before going to Execute (could have been changed in the mean time).
         if (stateMachine.getState() is UnholdingState) {
-            await stateMachine.setStateAndRunActionAsync(new ExecuteState());
+            stateMachine.setStateAndRunAction(new ExecuteState());
         }
     }
 
