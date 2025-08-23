@@ -75,11 +75,11 @@ public class StateMachineBuilder
     }
 
     /**
- * Adds an {@link IStateAction} that is to be executed in {@link StartingState}. Alias for withAction(action, ActiveStateName.Starting).
- * 
- * @param action An instance of {@link IStateAction} that is executed in {@link StartingState}
- * @return This {@link StateMachineBuilder} instance to use for further construction operations
- */
+     * Adds an {@link IStateAction} that is to be executed in {@link StartingState}. Alias for withAction(action, ActiveStateName.Starting).
+     * 
+     * @param action An instance of {@link IStateAction} that is executed in {@link StartingState}
+     * @return This {@link StateMachineBuilder} instance to use for further construction operations
+     */
     public StateMachineBuilder withActionInStarting(IStateAction action)
     {
         this.withAction(action, ActiveStateName.Starting);
